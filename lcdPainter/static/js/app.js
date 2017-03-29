@@ -1,5 +1,7 @@
-var width=128;
-var height=64;
+//var width=128;
+//var height=64;
+var width=16;
+var height=16;
 var drag=false;
 var ctx;
 var rect;
@@ -7,6 +9,33 @@ var scalex = 10;
 var scaley = 10;
 var bitmap = [];
 var canvas;
+
+/*
+  return the bitmap as an array of ints 
+*/
+function convertToInt() {
+	var intArr = [];
+	for (var i=0; i < width*height; i+=8) {
+		var t = 0;
+		//var s = "";
+		for (var k=0; k < 8; k++) {
+			//s = s + bitmap[i+k];
+			if (bitmap[i+k] == 1) { 
+				t = t + Math.pow(2, 7-k);
+			}
+			
+		}
+		intArr.push(t);
+		//console.log("0b" + s, t);
+	}
+	
+	return intArr;
+}
+
+function writeData() {
+	var data = convertToInt();
+	$.POST("/saveData", {'data': data}, (d) => {console.log("ok"); });
+}
 
 // onload
 $( () => {
