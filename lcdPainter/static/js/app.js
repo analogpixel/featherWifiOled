@@ -1,7 +1,7 @@
-//var width=128;
-//var height=64;
-var width=16;
-var height=16;
+var width=128;
+var height=64;
+//var width=16;
+//var height=16;
 var drag=false;
 var ctx;
 var rect;
@@ -34,7 +34,7 @@ function convertToInt() {
 
 function writeData() {
 	var data = convertToInt();
-	$.POST("/saveData", {'data': data}, (d) => {console.log("ok"); });
+	$.post("saveData", {'d': data.join(",") }, (d) => {console.log("ok"); });
 }
 
 // onload

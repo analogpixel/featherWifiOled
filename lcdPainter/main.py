@@ -14,9 +14,17 @@ def default():
 
 @app.route("/saveData", methods=['POST'])
 def saveData():
-	pass
-	
-	
+	data=request.form['d']
+	f = open("current.txt","w")
+	f.write(data)
+	f.close()
+	return ""
+
+@app.route("/loadData")
+def loadData():
+	data = open("current.txt").read()
+	return data
+
 if __name__ == "__main__":
     appHost = int(os.environ['APP_HOST']) if 'APP_HOST' in os.environ else '0.0.0.0'
     appPort = int(os.environ['APP_PORT']) if 'APP_PORT' in os.environ else 5000
