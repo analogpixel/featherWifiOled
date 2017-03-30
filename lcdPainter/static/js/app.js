@@ -33,8 +33,9 @@ function convertToInt() {
 }
 
 function writeData() {
-	var data = convertToInt();
-	$.post("saveData", {'d': data.join(",") }, (d) => {console.log("ok"); });
+	//var data = convertToInt();
+	//$.post("saveData", {'d': data.join(",") }, (d) => {console.log("ok"); });
+	$.post("saveData", {'d': bitmap.join(",") }, (d) => {console.log("ok"); });
 }
 
 // onload
