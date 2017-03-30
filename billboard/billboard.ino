@@ -9,8 +9,18 @@
 
 Adafruit_SSD1306 display = Adafruit_SSD1306(0);
 
+/*
+ * TODO
+ * look at Adafruit_SSD1306 and see how to reset the line
+ * look into threading code to do the lookup in the background
+ * use an array of ints to fill in the bitmap
+ */
+#include "wifi.h"
+/*
 const char* ssid     = "timeburglar";
 const char* password = "";
+*/
+
 const char* host  = "192.168.0.119";
 int httpPort = 5002;
 const char* url = "/loadData";
@@ -47,7 +57,8 @@ void setup() {
 
   WiFiClient client;
   client.connect(host, httpPort);
-
+  
+  
   
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                "Host: " + host + "\r\n" + 
@@ -67,8 +78,8 @@ void setup() {
 
   Serial.println("Ready to display");
   
-
   display.begin(SSD1306_SWITCHCAPVCC, 0x3D);  // initialize with the I2C addr 0x3C (for the 128x32)
+  
   
 }
  
