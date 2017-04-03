@@ -26,7 +26,8 @@ int httpPort = 5002;
 const char* url = "/loadData";
 
 int pointer=0;
-unsigned char logo16_glcd_bmp[8292];
+//unsigned char logo16_glcd_bmp[8292];
+unsigned int bmp[512];
 
 int counter=0;
 
@@ -71,7 +72,8 @@ void setup() {
   pointer=0;
   while(client.available()){
     String line = client.readStringUntil(',');
-    logo16_glcd_bmp[pointer] = line.toInt();
+    //logo16_glcd_bmp[pointer] = line.toInt();
+    bmp[pointer] = line.toInt();
     pointer++;
     Serial.println(line.toInt() );
   }
@@ -86,11 +88,13 @@ void setup() {
  
 void loop() {
    yield();
-
+  int x =0;
+  int y =0;
+  
   display.clearDisplay();
   //display.drawBitmap(0, 0,  logo16_glcd_bmp, 128, 64, 1);
 
-  
+  /*
   for (int x=0; x < 128; x++) {
     for (int y=0; y < 64; y++) {
       if (logo16_glcd_bmp[ x + (y*128)] == 1) {
@@ -98,7 +102,33 @@ void loop() {
       }
     }
   }
+  */
 
+  for (int j=0; j < 513; j++) {
+    int a = bmp[j];
+
+    if (a == 0) { continue; }
+    
+   int n = (j * 16);
+   if (n ==0) {
+    x = 0;
+    y = 0;
+   } else {
+     x = (n % 128) - 16;
+     y = n / 128;
+   }
+   
+    for (int i=0; i < 16; i++) {
+      //printf("%d\n", a & 1? 1:0);
+
+      if ( a & 1? 1:0 == 1) {
+        display.drawPixel((16+x)-i,y,1);
+      }
+      
+      a  >>=1;
+    }
+    
+  }
 
   display.setCursor(0,0);
   display.display(); // actually display all of the above

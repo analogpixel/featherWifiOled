@@ -11,31 +11,33 @@ var bitmap = [];
 var canvas;
 
 /*
-  return the bitmap as an array of ints 
+  return the bitmap as an array of ints  16bits long
 */
 function convertToInt() {
 	var intArr = [];
-	for (var i=0; i < width*height; i+=8) {
+	for (var i=0; i < width*height; i+=16) {
 		var t = 0;
-		//var s = "";
-		for (var k=0; k < 8; k++) {
-			//s = s + bitmap[i+k];
+		var s = "";
+		for (var k=0; k < 16; k++) {
+			s = s + bitmap[i+k];
 			if (bitmap[i+k] == 1) { 
-				t = t + Math.pow(2, 7-k);
+				t = t + Math.pow(2, 15-k);
 			}
 			
 		}
 		intArr.push(t);
-		//console.log("0b" + s, t);
+		console.log("0b" + s, t);
 	}
 	
 	return intArr;
 }
 
 function writeData() {
-	//var data = convertToInt();
-	//$.post("saveData", {'d': data.join(",") }, (d) => {console.log("ok"); });
-	$.post("saveData", {'d': bitmap.join(",") }, (d) => {console.log("ok"); });
+	var data = convertToInt();
+	$.post("saveData", {'d': data.join(",") }, (d) => {console.log("ok"); });
+	
+	// just return the bits 
+	//$.post("saveData", {'d': bitmap.join(",") }, (d) => {console.log("ok"); });
 }
 
 // onload
