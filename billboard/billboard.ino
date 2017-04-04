@@ -75,13 +75,17 @@ void setup() {
     //logo16_glcd_bmp[pointer] = line.toInt();
     bmp[pointer] = line.toInt();
     pointer++;
-    Serial.println(line.toInt() );
+    //Serial.println(line.toInt() );
   }
 
   Serial.println("Ready to display");
   
   display.begin(SSD1306_SWITCHCAPVCC, 0x3D);  // initialize with the I2C addr 0x3C (for the 128x32)
-  
+
+  Serial.println("----Width and Height---");
+  Serial.println( display.width() );
+  Serial.println( display.height() );
+  Serial.println("-----");
   
 }
  
@@ -90,6 +94,7 @@ void loop() {
    yield();
   int x =0;
   int y =0;
+  int counter=0;
   
   display.clearDisplay();
   //display.drawBitmap(0, 0,  logo16_glcd_bmp, 128, 64, 1);
@@ -103,31 +108,53 @@ void loop() {
     }
   }
   */
- 
+
+  // 64 rows
+  for (int k=0; k < 64; k++) {
+    
+    // each row has 8 16bit numbers
+    for (int j=0; j < 8;j++) {
+      // move x to the end of the 16bit run
+      x = 16*j;
+
+      // get the next 16bit number
+      int a = bmp[counter];
+      
+        // for each bit in the number, 
+        for (int i=0; i < 16; i++) {
+
+          // if the pixel is on(1) then display it
+          if ( a & 1 ? 1:0 == 1) {
+            display.drawPixel(x-i,k,1);
+          } 
+
+          // shift all the bits over
+          a >>=1;
+        }
+
+        // increase the counter by 1 to get the next number
+        counter++;
+    }
+  }
+  
+ /*
   for (int j=0; j < 513; j++) {
     int a = bmp[j];
 
-    x += 16;
-    if (x >= 128+16) { x=16; y++ ; }
+    x += 15;
+    if (x >= 121) { x=15; y++ ; }
     
     if (a == 0) { continue; }
     
     for (int i=0; i < 16; i++) {
-
-      /*
-      if ( a & 1000000000000000 ? 1:0 == 1) {
-        display.drawPixel(x+i,y,1);
-      }
-      */
        if ( a & 1 ? 1:0 == 1) {
-        display.drawPixel(x-i-1,y,1);
+        display.drawPixel(x-i,y,1);
       }   
-      //a  <<=1;
       a >>=1;
     }
      
   }
-
+*/
   display.setCursor(0,0);
   display.display(); // actually display all of the above
   delay(10);

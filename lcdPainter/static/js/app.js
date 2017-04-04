@@ -10,11 +10,41 @@ var scaley = 8;
 var bitmap = [];
 var canvas;
 
+
+function convertToInt() {
+	var counter=0;
+	var intArr = [];
+
+	// for each row
+	for (var k=0; k < height; k++) {
+
+		// each row has 8 (width/16)  16bit segments of pixels
+		for (var j=0; j < width/16; j++) {
+
+			// set the current total to 0
+			var t=0;
+
+			// loop through each pixel in the 16bit number
+			for (var i=0; i < 16; i++) {
+				if (bitmap[counter] == 1) {
+					t = t + Math.pow(2,15-i);
+				}
+				counter++;
+			}
+			intArr.push(t);
+		}
+	}
+
+	return intArr;
+}
+
+
 /*
   return the bitmap as an array of ints  16bits long
-*/
+
 function convertToInt() {
 	var intArr = [];
+	//for (var i=0; i < width*height; i+=16) {
 	for (var i=0; i < width*height; i+=16) {
 		var t = 0;
 		var s = "";
@@ -31,6 +61,7 @@ function convertToInt() {
 	
 	return intArr;
 }
+*/
 
 function writeData() {
 	var data = convertToInt();
