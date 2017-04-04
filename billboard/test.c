@@ -3,9 +3,9 @@
 int main() {
 int a = 3;
 
-for (int i=0; i < 8; i++) {
-   printf("%d\n", a & 1? 1:0);
-   a  >>=1;
+for (int i=0; i < 16; i++) {
+   printf("%d\n", a & 1000000000000000 ? 1:0);
+   a  <<= 1;
 }
 
 return 0;

@@ -103,31 +103,29 @@ void loop() {
     }
   }
   */
-
+ 
   for (int j=0; j < 513; j++) {
     int a = bmp[j];
 
+    x += 16;
+    if (x >= 128+16) { x=16; y++ ; }
+    
     if (a == 0) { continue; }
     
-   int n = (j * 16);
-   if (n ==0) {
-    x = 0;
-    y = 0;
-   } else {
-     x = (n % 128) - 16;
-     y = n / 128;
-   }
-   
     for (int i=0; i < 16; i++) {
-      //printf("%d\n", a & 1? 1:0);
 
-      if ( a & 1? 1:0 == 1) {
-        display.drawPixel((16+x)-i,y,1);
+      /*
+      if ( a & 1000000000000000 ? 1:0 == 1) {
+        display.drawPixel(x+i,y,1);
       }
-      
-      a  >>=1;
+      */
+       if ( a & 1 ? 1:0 == 1) {
+        display.drawPixel(x-i-1,y,1);
+      }   
+      //a  <<=1;
+      a >>=1;
     }
-    
+     
   }
 
   display.setCursor(0,0);

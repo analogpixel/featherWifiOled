@@ -5,8 +5,8 @@ var height=64;
 var drag=false;
 var ctx;
 var rect;
-var scalex = 10;
-var scaley = 10;
+var scalex = 8;
+var scaley = 8;
 var bitmap = [];
 var canvas;
 
@@ -91,12 +91,14 @@ function redraw() {
 }
 
 function mouseMove(e) {
-  if (drag) {
-      x = Math.floor(e.clientX - rect.left);
+	x = Math.floor(e.clientX - rect.left);
       y = Math.floor(e.clientY - rect.top);
-   	  xx = Math.floor(x/scalex)
+   	  xx = Math.floor(x/scalex);
    	  yy = Math.floor(y/scaley);
 
+	$("#xpos").html(xx);
+	$("#ypos").html(yy);
+  if (drag) {
    	  bitmap[xx + (yy*width) ] = 1;
    	  ctx.fillRect( xx*scalex, yy*scaley, scalex, scaley);
    
