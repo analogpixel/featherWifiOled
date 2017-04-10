@@ -29,7 +29,10 @@ int pointer=0;
 //unsigned char logo16_glcd_bmp[8292];
 unsigned int bmp[512];
 
-int counter=0;
+int haveData=0;
+
+int loopCounter=0;
+WiFiClient client;
 
 /*
 static const unsigned char PROGMEM logo16_glcd_bmp[] = {
@@ -56,7 +59,8 @@ void setup() {
     Serial.print(".");
   }
 
-  WiFiClient client;
+  /*
+  //WiFiClient client;
   client.connect(host, httpPort);
   
   
@@ -86,6 +90,7 @@ void setup() {
   Serial.println( display.width() );
   Serial.println( display.height() );
   Serial.println("-----");
+  */
   
 }
  
@@ -95,6 +100,8 @@ void loop() {
   int x =0;
   int y =0;
   int counter=0;
+
+  // Serial.println(loopCounter);
   
   display.clearDisplay();
   //display.drawBitmap(0, 0,  logo16_glcd_bmp, 128, 64, 1);
@@ -109,31 +116,33 @@ void loop() {
   }
   */
 
-  // 64 rows
-  for (int k=0; k < 64; k++) {
-    
-    // each row has 8 16bit numbers
-    for (int j=0; j < 8;j++) {
-      // move x to the end of the 16bit run
-      x = 16*j;
-
-      // get the next 16bit number
-      int a = bmp[counter];
+  if (haveData) {
+    // 64 rows
+    for (int k=0; k < 64; k++) {
       
-        // for each bit in the number, 
-        for (int i=0; i < 16; i++) {
-
-          // if the pixel is on(1) then display it
-          if ( a & 1 ? 1:0 == 1) {
-            display.drawPixel(x-i,k,1);
-          } 
-
-          // shift all the bits over
-          a >>=1;
-        }
-
-        // increase the counter by 1 to get the next number
-        counter++;
+      // each row has 8 16bit numbers
+      for (int j=0; j < 8;j++) {
+        // move x to the end of the 16bit run
+        x = 16*j;
+  
+        // get the next 16bit number
+        int a = bmp[counter];
+        
+          // for each bit in the number, 
+          for (int i=0; i < 16; i++) {
+  
+            // if the pixel is on(1) then display it
+            if ( a & 1 ? 1:0 == 1) {
+              display.drawPixel(x-i,k,1);
+            } 
+  
+            // shift all the bits over
+            a >>=1;
+          }
+  
+          // increase the counter by 1 to get the next number
+          counter++;
+      }
     }
   }
   
@@ -157,9 +166,36 @@ void loop() {
 */
   display.setCursor(0,0);
   display.display(); // actually display all of the above
-  delay(10);
+  //delay(10);
+  loopCounter++;
   
+  
+  if (loopCounter==1) {
+    //Serial.println("Connect...");
+    client.connect(host, httpPort);
+    client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+               "Host: " + host + "\r\n" + 
+               "Connection: close\r\n\r\n"); 
+    display.begin(SSD1306_SWITCHCAPVCC, 0x3D); 
+  }
 
+  if (loopCounter==30) {
+    //Serial.println("Getting data...");
+    pointer=0;
+    while(client.available()){
+      String line = client.readStringUntil(',');
+      //logo16_glcd_bmp[pointer] = line.toInt();
+      bmp[pointer] = line.toInt();
+      pointer++;
+      //Serial.println(line.toInt() );
+    }
+    display.begin(SSD1306_SWITCHCAPVCC, 0x3D); 
+    haveData=1;
+  }
+
+  if (loopCounter > 90) {
+    loopCounter=0;
+  }
  
    
 }
